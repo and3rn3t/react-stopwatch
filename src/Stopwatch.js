@@ -5,35 +5,53 @@ class Stopwatch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: 0.0,
-      pause: true,
+      runningTime: 0,
+      running: false,
+      stopwatch: 0,
     };
   }
 
-  handleReset(event) {
-    console.log(this.state.time, this.state.pause);
+  handleStart(event) {
+    // console.log(this.stopwatch, this.state.runningTime, this.state.running);
+    this.stopwatch = setInterval((event) => this.newRunningTime(), 1);
+  }
+
+  newRunningTime() {
     this.setState({
-      time: 0.0,
-      pause: true,
+      runningTime: this.state.runningTime + 1,
+      running: true,
     });
   }
 
-  handleStart(event) {}
-
   handlePause(event) {
-    let pause = !this.state.pause;
-    console.log(this.state.time, this.state.pause);
-    if (pause) {
-      this.setState({ pause });
+    // console.log(this.stopwatch, this.state.runningTime, this.state.running);
+    let running = this.state.running;
+    if (running === true) {
+      this.resetInterval();
+      this.setState({ running: false });
     } else {
       this.handleStart();
     }
   }
 
+  handleReset(event) {
+    // console.log(this.stopwatch, this.state.runningTime, this.state.running);
+    this.resetInterval();
+    this.setState({
+      runningTime: 0,
+      running: false,
+    });
+  }
+
+  resetInterval() {
+    clearInterval(this.stopwatch);
+    this.stopwatch = 0;
+  }
+
   render() {
     return (
       <div className="stopwatch">
-        <h1>{this.state.time}</h1>
+        <h1>{this.state.runningTime}</h1>
         <div className="controls">
           <button onClick={(event) => this.handleReset(event)}>Reset</button>
           <button onClick={(event) => this.handleStart(event)}>Start</button>
